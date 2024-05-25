@@ -50,19 +50,27 @@ FROM Products
 WHERE UnitPrice > 30
 
 -- 11. Ürünlerin adını tamamen küçültüp fiyat sırasına göre tersten listele
-
+SELECT LOWER(ProductName) AS LowerCaseProductName
+FROM Products
+ORDER BY UnitPrice DESC
 
 -- 12. Çalışanların ad ve soyadlarını yanyana gelecek şekilde yazdır
-
+SELECT CONCAT(FirstName, ' ' ,LastName) AS FullName
+FROM Employees
 
 -- 13. Region alanı NULL olan kaç tedarikçim var?
-
+SELECT COUNT(SupplierID)
+FROM Suppliers
+WHERE Region IS NULL
 
 -- 14. a.Null olmayanlar?
-
+SELECT COUNT(SupplierID)
+FROM Suppliers
+WHERE Region IS NOT NULL
 
 -- 15. Ürün adlarının hepsinin soluna TR koy ve büyültüp olarak ekrana yazdır.
-
+SELECT CONCAT('TR ', UPPER(ProductName))
+FROM Products
 
 -- 16. a.Fiyatı 20den küçük ürünlerin adının başına TR ekle
 

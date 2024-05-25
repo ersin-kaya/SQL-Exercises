@@ -1,32 +1,53 @@
 -- 1. Product isimlerini (`ProductName`) ve birim başına miktar (`QuantityPerUnit`) değerlerini almak için sorgu yazın.
-
+SELECT ProductName, QuantityPerUnit
+FROM
+Products
 
 -- 2. Ürün Numaralarını (`ProductID`) ve Product isimlerini (`ProductName`) değerlerini almak için sorgu yazın. Artık satılmayan ürünleri (`Discontinued`) filtreleyiniz.
-
+SELECT ProductID, ProductName
+FROM Products
+WHERE Discontinued != 1
 
 -- 3. Durdurulan Ürün Listesini, Ürün kimliği ve ismi (`ProductID`, `ProductName`) değerleriyle almak için bir sorgu yazın.
-
+SELECT ProductID, ProductName
+FROM Products
+WHERE Discontinued = 0 -- :)
 
 -- 4. Ürünlerin maliyeti 20'dan az olan Ürün listesini (`ProductID`, `ProductName`, `UnitPrice`) almak için bir sorgu yazın.
-
+SELECT ProductID, ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice < 20
 
 -- 5. Ürünlerin maliyetinin 15 ile 25 arasında olduğu Ürün listesini (`ProductID`, `ProductName`, `UnitPrice`) almak için bir sorgu yazın.
-
+SELECT ProductID, ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice > 15 AND UnitPrice < 25
 
 -- 6. Ürün listesinin (`ProductName`, `UnitsOnOrder`, `UnitsInStock`) stoğun siparişteki miktardan az olduğunu almak için bir sorgu yazın.
-
+-- Koşulu sağlayan ürünlerin listesi
+SELECT ProductName, UnitsOnOrder, UnitsInStock
+FROM Products
+WHERE UnitsInStock < UnitsOnOrder
 
 -- 7. İsmi `a` ile başlayan ürünleri listeleyeniz.
-
+SELECT *
+FROM Products
+WHERE ProductName LIKE 'a%' 
+-- LIKE keyword is case insensitive in SQL Server and MySQL. It is case sensitive in PostgreSQL.
 
 -- 8. İsmi `i` ile biten ürünleri listeleyeniz.
-
+SELECT *
+FROM Products
+WHERE ProductName LIKE '%i'
 
 -- 9. Ürün birim fiyatlarına %18’lik KDV ekleyerek listesini almak (ProductName, UnitPrice, UnitPriceKDV) için bir sorgu yazın.
-
+SELECT ProductName, UnitPrice, UnitPrice * 1.18 AS UnitPriceKDV
+FROM Products
 
 -- 10. Fiyatı 30 dan büyük kaç ürün var?
-
+SELECT COUNT(*) AS NumberOfProducts
+FROM Products
+WHERE UnitPrice > 30
 
 -- 11. Ürünlerin adını tamamen küçültüp fiyat sırasına göre tersten listele
 

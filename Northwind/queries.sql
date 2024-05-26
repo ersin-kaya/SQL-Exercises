@@ -209,19 +209,46 @@ LEFT JOIN Employees E
 ON O.EmployeeID = E.EmployeeID
 
 --36. Geciken siparişlerim?
-
+SELECT *
+FROM Orders
+WHERE ShippedDate > RequiredDate
 
 --37. Geciken siparişlerimin tarihi, müşterisinin adı
-
+SELECT O.OrderDate, C.ContactName
+FROM Orders O
+LEFT JOIN Customers C
+ON O.CustomerID = C.CustomerID
+WHERE O.ShippedDate > O.RequiredDate
 
 --38. 10248 nolu siparişte satılan ürünlerin adı, kategorisinin adı, adedi
-
+SELECT P.ProductName, C.CategoryName, OD.Quantity
+FROM [Order Details] OD
+INNER JOIN Products P
+ON OD.ProductID = P.ProductID
+INNER JOIN Categories C
+ON P.CategoryID = C.CategoryID
+WHERE OD.OrderID = 10248
 
 --39. 10248 nolu siparişin ürünlerinin adı , tedarikçi adı
-
+SELECT P.ProductName, S.CompanyName AS Supplier
+FROM [Order Details] OD
+INNER JOIN Products P
+ON OD.ProductID = P.ProductID
+INNER JOIN Suppliers S
+ON P.SupplierID = S.SupplierID
+WHERE OD.OrderID = 10248
 
 --40. 3 numaralı ID ye sahip çalışanın 1997 yılında sattığı ürünlerin adı ve adeti
-
+SELECT P.ProductName, SUM(Quantity) AS Quantity
+FROM Orders O
+INNER JOIN [Order Details] OD
+ON O.OrderID = OD.OrderID
+INNER JOIN Products P
+ON OD.ProductID = P.ProductID
+WHERE 
+    O.EmployeeID = 3
+    AND O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31'
+GROUP BY OD.ProductID, P.ProductName
 
 --41. 1997 yılında bir defasinda en çok satış yapan çalışanımın ID, Ad soyad
 --tek siparişte en fazla ciroyu elde eden çalışanı ele alırsak..

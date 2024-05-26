@@ -170,19 +170,43 @@ ON O.CustomerID = C.CustomerID
 WHERE O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31'
 
 --31. Taşıma ücreti 40 üzeri olan siparişlerim
-
+SELECT *
+FROM Orders
+WHERE Freight > 40
 
 --32. Taşıma ücreti 40 ve üzeri olan siparişlerimin şehri, müşterisinin adı
-
+SELECT O.ShipCity, C.ContactName, COUNT(*) AS OrderCount
+FROM Orders O
+LEFT JOIN Customers C
+ON O.CustomerID = C.CustomerID
+WHERE O.Freight >= 40
+GROUP BY O.ShipCity, C.ContactName
 
 --33. 1997 yılında verilen siparişlerin tarihi, şehri, çalışan adı -soyadı ( ad soyad birleşik olacak ve büyük harf),
-
+SELECT O.OrderDate, O.ShipCity, UPPER(CONCAT(E.FirstName, ' ', E.LastName)) AS EmployeeFullName
+FROM Orders O
+LEFT JOIN Employees E
+ON O.EmployeeID = E.EmployeeID
+WHERE O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31'
 
 --34. 1997 yılında sipariş veren müşterilerin contactname i, ve telefon numaraları ( telefon formatı 2223322 gibi olmalı )
-
+SELECT C.ContactName, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(C.Phone, '(', ''), ')', ''), '-', ''),'.', ''),' ', '') AS Phone
+FROM Orders O
+LEFT JOIN Customers C
+ON O.CustomerID = C.CustomerID
+WHERE O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31'
+GROUP BY C.ContactName, C.Phone
 
 --35. Sipariş tarihi, müşteri contact name, çalışan ad, çalışan soyad
-
+SELECT 
+    O.OrderDate, 
+    C.ContactName AS CustomerContactName, 
+    CONCAT(E.FirstName, ' ', E.LastName) AS EmployeeFullName
+FROM Orders O
+LEFT JOIN Customers C
+ON O.CustomerID = C.CustomerID
+LEFT JOIN Employees E
+ON O.EmployeeID = E.EmployeeID
 
 --36. Geciken siparişlerim?
 

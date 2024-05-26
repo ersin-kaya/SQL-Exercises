@@ -73,19 +73,31 @@ SELECT CONCAT('TR ', UPPER(ProductName))
 FROM Products
 
 -- 16. a.Fiyatı 20den küçük ürünlerin adının başına TR ekle
-
+SELECT CONCAT('TR ', UPPER(ProductName))
+FROM Products
+WHERE UnitPrice < 20
 
 -- 17. En pahalı ürün listesini (`ProductName` , `UnitPrice`) almak için bir sorgu yazın.
-
+-- en pahalı ürün
+SELECT TOP 1 ProductName, UnitPrice
+FROM Products
+ORDER BY UnitPrice DESC
 
 -- 18. En pahalı on ürünün Ürün listesini (`ProductName` , `UnitPrice`) almak için bir sorgu yazın.
-
+SELECT TOP 10 ProductName, UnitPrice
+FROM Products
+ORDER BY UnitPrice DESC
 
 -- 19. Ürünlerin ortalama fiyatının üzerindeki Ürün listesini (`ProductName` , `UnitPrice`) almak için bir sorgu yazın.
-
+SELECT ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice > (SELECT AVG(UnitPrice)
+                   FROM Products)
 
 -- 20. Stokta olan ürünler satıldığında elde edilen miktar ne kadardır.
-
+SELECT SUM(UnitPrice * UnitsInStock) AS TotalEarnings
+FROM Products
+WHERE UnitsInStock > 0
 
 -- 21. Mevcut ve Durdurulan ürünlerin sayılarını almak için bir sorgu yazın.
 

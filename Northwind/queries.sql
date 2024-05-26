@@ -137,19 +137,37 @@ GROUP BY OD.ProductID, P.ProductName, C.CategoryName, S.CompanyName
 ORDER BY QuantityOfMostSoldProduct DESC
 
 --26. Stokta bulunmayan ürünlerin ürün listesiyle birlikte tedarikçilerin ismi ve iletişim numarasını (`ProductID`, `ProductName`, `CompanyName`, `Phone`) almak için bir sorgu yazın.
-
+SELECT P.ProductID, ProductName, S.CompanyName, S.Phone
+FROM Products P
+LEFT JOIN Suppliers S
+ON P.SupplierID = S.SupplierID
+WHERE UnitsInStock = 0
 
 --27. 1998 yılı mart ayındaki siparişlerimin adresi, siparişi alan çalışanın adı, çalışanın soyadı
-
+SELECT O.ShipAddress, CONCAT(E.FirstName,' ', E.LastName) AS Employee
+FROM Orders O
+LEFT JOIN Employees E
+ON O.EmployeeID = E.EmployeeID
+WHERE O.OrderDate BETWEEN '1998-03-01' AND '1998-03-31'
 
 --28. 1997 yılı şubat ayında kaç siparişim var?
-
+SELECT COUNT(*) AS OrderCount
+FROM Orders
+WHERE OrderDate BETWEEN '1997-02-01' AND '1997-02-28'
 
 --29. London şehrinden 1998 yılında kaç siparişim var?
-
+SELECT COUNT(*) AS OrderCount
+FROM Orders
+WHERE 
+    ShipCity = 'London'
+    AND OrderDate BETWEEN '1998-01-01' AND '1998-12-31'
 
 --30. 1997 yılında sipariş veren müşterilerimin contactname ve telefon numarası
-
+SELECT C.ContactName, C.Phone
+FROM Orders O
+LEFT JOIN Customers C
+ON O.CustomerID = C.CustomerID
+WHERE O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31'
 
 --31. Taşıma ücreti 40 üzeri olan siparişlerim
 

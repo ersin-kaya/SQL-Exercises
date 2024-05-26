@@ -100,19 +100,41 @@ FROM Products
 WHERE UnitsInStock > 0
 
 -- 21. Mevcut ve Durdurulan ürünlerin sayılarını almak için bir sorgu yazın.
-
+SELECT COUNT(ProductID) AS InStockAndDiscontinuedCount
+FROM Products
+WHERE Discontinued = 1 AND UnitsInStock > 0
 
 -- 22. Ürünleri kategori isimleriyle birlikte almak için bir sorgu yazın.
-
+SELECT C.CategoryName, P.*
+FROM Products P
+LEFT JOIN Categories C
+ON P.CategoryID = C.CategoryID
 
 -- 23. Ürünlerin kategorilerine göre fiyat ortalamasını almak için bir sorgu yazın.
-
+SELECT C.CategoryName, AVG(UnitPrice) AS AveragePrice
+FROM Products P
+RIGHT JOIN Categories C
+ON P.CategoryID = C.CategoryID
+GROUP BY C.CategoryID, C.CategoryName
 
 -- 24. En pahalı ürünümün adı, fiyatı ve kategorisin adı nedir?
-
+SELECT TOP 1 P.ProductName, P.UnitPrice, C.CategoryName
+FROM Products P
+LEFT JOIN Categories C
+ON C.CategoryID = P.CategoryID
+ORDER BY UnitPrice DESC
 
 -- 25. En çok satılan ürününün adı, kategorisinin adı ve tedarikçisinin adı
-
+SELECT TOP 1 P.ProductName, C.CategoryName, S.CompanyName, SUM(OD.Quantity) AS QuantityOfMostSoldProduct
+FROM [Order Details] OD
+INNER JOIN Products P
+ON P.ProductID = OD.ProductID
+LEFT JOIN Categories C
+ON C.CategoryID = P.CategoryID
+LEFT JOIN Suppliers S
+ON S.SupplierID = P.SupplierID
+GROUP BY OD.ProductID, P.ProductName, C.CategoryName, S.CompanyName
+ORDER BY QuantityOfMostSoldProduct DESC
 
 --26. Stokta bulunmayan ürünlerin ürün listesiyle birlikte tedarikçilerin ismi ve iletişim numarasını (`ProductID`, `ProductName`, `CompanyName`, `Phone`) almak için bir sorgu yazın.
 

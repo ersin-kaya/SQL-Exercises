@@ -252,23 +252,70 @@ GROUP BY OD.ProductID, P.ProductName
 
 --41. 1997 yılında bir defasinda en çok satış yapan çalışanımın ID, Ad soyad
 --tek siparişte en fazla ciroyu elde eden çalışanı ele alırsak..
-
+SELECT C.CustomerID, C.ContactName
+FROM Customers C
+WHERE C.CustomerID = (
+                        SELECT O.CustomerID
+                        FROM Orders O
+                        WHERE O.OrderID = ( 
+                                            SELECT TOP 1 OD.OrderID
+                                            FROM [Order Details] OD
+                                            WHERE OD.OrderID IN(SELECT O.OrderID
+                                                                FROM Orders O
+                                                                WHERE O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31')
+                                            GROUP BY OD.OrderID
+                                            ORDER BY SUM(OD.UnitPrice * OD.Quantity) DESC
+                                          )
+                     )
 
 --42. 1997 yılında en çok satış yapan çalışanımın ID, Ad soyad ****
---ürün adedine göre
-
+--sattığı ürün adedine göre olsun
+SELECT CustomerID, ContactName
+FROM Customers
+WHERE CustomerID = (
+                    SELECT CustomerID
+                    FROM Orders
+                    WHERE OrderID = (
+                                        SELECT TOP 1 OD.OrderID
+                                        FROM [Order Details] OD
+                                        WHERE OD.OrderID IN(SELECT O.OrderID
+                                                            FROM Orders O
+                                                            WHERE O.OrderDate BETWEEN '1997-01-01' AND '1997-12-31')
+                                        GROUP BY OD.OrderID
+                                        ORDER BY SUM(Quantity) DESC
+                                    )
+                    )
 
 --43. En pahalı ürünümün adı,fiyatı ve kategorisin adı nedir?
-
+SELECT TOP 1 P.ProductName, P.UnitPrice, C.CategoryName
+FROM Products P
+INNER JOIN Categories C
+ON P.CategoryID = C.CategoryID
+ORDER BY P.UnitPrice DESC
 
 --44. Siparişi alan personelin adı,soyadı, sipariş tarihi, sipariş ID. Sıralama sipariş tarihine göre
+SELECT 
+    CONCAT(E.FirstName, ' ', E.LastName) AS EmployeeFullName,
+    O.OrderDate,
+    O.OrderID
+FROM Orders O
+INNER JOIN Employees E
+ON O.EmployeeID = E.EmployeeID
+ORDER BY O.OrderDate DESC
 
-
---45. SON 5 siparişimin ortalama fiyatı ve orderid nedir?
-
-
---son 5 siparişin toplam tutarının ortalaması
-
+--45. SON 5 siparişimin ortalama fiyatı nedir?
+SELECT AVG(TotalSales) AS AVG
+FROM(
+    SELECT SUM(UnitPrice * Quantity) AS TotalSales
+    FROM [Order Details]
+    WHERE OrderID IN(
+                        SELECT TOP 5 OrderID
+                        FROM Orders
+                        GROUP BY OrderID, OrderDate
+                        ORDER BY OrderDate DESC
+                    )
+    GROUP BY OrderID
+    ) AS Subquery;
 
 --46. Ocak ayında satılan ürünlerimin adı ve kategorisinin adı ve toplam satış miktarı nedir?
 
